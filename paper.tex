@@ -1,0 +1,77 @@
+\documentclass{article}
+
+\usepackage{amsthm, amsmath, amssymb}
+\usepackage[linesnumbered, ruled, vlined]{algorithm2e}
+\usepackage{csvsimple}
+\usepackage[no-math]{fontspec}
+\usepackage{biblatex}
+
+\setmainfont{Latin Modern Roman}[FakeBold=3]
+\usepackage{unicode-math}
+\setmathfont{NewCMMath-Book.otf}[FakeBold=3]
+
+\title{\bfseries A Simple Yet Effective and Efficient Collaborative Filtering Based Recommendation System}
+\author{Masum Billal\and Mahmudul Hasan Munna}
+
+\addbibresource{ref.bib}
+
+\begin{document}
+	\maketitle
+		\begin{abstract}
+			In this paper, we describe a simple yet effective way to recommend items to a user and predict the rating of an item given by a user with high accuracy.
+		\end{abstract}
+	\section{Introduction}
+	A common problem (insert relevant papers) with typical filtering based recommendation systems they usually consider all users similar to a user. To mitigate performance problems, (insert relevant papers) show that we can simply consider only a handful of neighbors for a particular user.
+	\section{Algorithm}
+	Let us first describe the assumption problem that we want to solve. Let $\mathcal{M}$ be a set of movies and $\mathcal{U}$ be a set of users. We are given a set of triplets $(u,m,r)\in\mathcal{S}$ such that $u\in\mathcal{U},m\in\mathcal{U}$ and $1\leq r\leq 5$ which denotes the rating $r$ of movie $m$ given by user $u$. We are also given a set of pairs $(u,m)\in\mathcal{T}$ such that $u\in\mathcal{U},m\in\mathcal{M}$ and we want to predict the rating $r$ given by user $m$ to the movie $m$. Let $r_{um}$ be the rating of movie $m$ given by user $u$ and $C_{uv}$ be the set of items that both $u$ and $v$ rated. We use the \textit{Pearson Correlation Coefficient} (see \textcite{freedman2007statistics}) as the measure of correlation between user $u$ and $v$. However, we will use a normalized version of it for practical consideration as follows:
+		\begin{align*}
+			S_{uv}
+				& = \dfrac{\sum_{m\in C_{uv}}(r_{um}-\bar{r_{u}})(r_{vm}-\bar{r_{v}})}{\sqrt{\sum_{m\in C_{uv}}(r_{um}-\bar{r_{u}})^{2}}\sqrt{\sum_{m\in C_{uv}}(r_{vm}-\bar{r_{v}})^{2}}}\\
+			S_{uv}
+				& \leftarrow \dfrac{S_{uv}+1}{2}
+		\end{align*}
+	This normalization is done using the fact that Pearson correlation coefficient $p_{uv}$ is always in the range $[-1,1]$. We call two users $u$ and $v$ similar if $S_{uv}\geq s$ for some positive real number $s$ such that $0\leq s\leq 1$. Typically, we want $s$ in the range $[.5, 1]$. For this paper, we will consider $s\in\{.7,.8,.9\}$. For a movie $m$, let $\mathcal{U}_{m}$ be the set of users who rated $m$ and $M_{u}$ be the set of movies rated by user $u$. For a set or tuple $A$, let $\bar{A}$ denote the average of the numbers in $A$. For a tuple of weights $\mathbf{w}=(w_{1},\ldots,w_{n})$ such that $0\leq w_{i}\leq 1$ and $\sum_{i=1}^{n}w_{i}=1$ and a tuple of positive real numbers $\mathbf{a}=(a_{1},\ldots,a_{n})$, the \textit{weighted harmonic mean} of $\mathbf{a}$ is defined as
+		\begin{align*}
+			\mathfrak{H}(\mathbf{a},\mathbf{w})
+				& = \dfrac{\sum_{i=1}^{n}w_{i}}{\sum_{i=1}^{n}\dfrac{w_{i}}{a_{i}}}
+		\end{align*}
+	Usually, \textit{weighted arithmetic mean} is used to predict the ratings in a recommendation system. But in this paper, we have investigated the results using harmonic mean. Next, we describe the rating prediction algorithm for a pair $(u,m)$.
+		\begin{algorithm}[H]
+			\SetAlgoLined
+			\KwIn{Test data in the format $(u,m)$, Threshold $t$, similarity $s$, $T$ to take first $T$ neighbors for a user $u$}
+			\KwOut{A single integer in the range $[1,5]$ denoting the predicted rating}
+			\KwData{Train data in the format $(u,m,r)$}
+			$W = []$\\
+			$X = []$\\
+			$tot\leftarrow0$\\
+			$R\leftarrow U_{m}$\\
+			res = 0\\
+			\For{$v\in R$}{
+				\If{$|C_{uv}|<t$}{continue}
+				\If{$S_{uv}<s$}{continue}
+				\If{$S_{uv}\geq s$}{
+					$W\leftarrow [W,s]$\\
+					$X\leftarrow [X,r_{vm}]$\\
+					$tot\leftarrow tot+1$\\
+					\If{$tot>T$}{break}
+				}
+			}
+			\If{$tot>0$}{
+				res = $\mathfrak{H}(X, W)$
+			}
+			\Else{
+				\If{$|M_{u}|>0$}{
+					res = $\bar{M_{u}}$
+				}
+				\Else{
+					res = $\bar{R_{m}}$
+				}
+			}
+			res = res+$.5$\\
+			res = floor(res)\\
+			return res
+			\caption{Algorithm to predict rating}
+		\end{algorithm}
+
+	\printbibliography
+\end{document}
