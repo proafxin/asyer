@@ -74,6 +74,32 @@
 			return res
 			\caption{Algorithm to predict rating}
 		\end{algorithm}
+	\subsection{Algorithm Principles}
+	Our algorithm is based on the following principles.
+		\begin{enumerate}
+			\item[\bfseries First principle] \textit{Two users $u$ and $v$ are more relevant for each other if it is ensured that $|C_{uv}|\geq t$ for some large enough positive integer $t$}. It is obvious how this principle helps us establish better correlation between users since two users $u$ and $v$ can have very high correlation with very low number of common items between them.
+			\item[\bfseries Second principle] \textit{If first principle is established, then it is possible to get an accurate estimation of predicted rating with a lower number of neighbors instead of using a very large number of neighbors}. This helps us predict a rating a lot more efficiently with better accuracy. It is also possible to get a mathematical sense of why this works in practice. Let $m$ and $n$ be positive integers such that $m>n$. Let $u$ be a user and $\mathcal{N}_{m}=\{v:|C_{uv}|\geq t\}$ and $\mathcal{N}_{n}=\{u:|C_{uv}|\geq t\}$ be two sets of neighbors of a user $u$ such that $|\mathcal{C}_{m}|=m$ and $|\mathcal{N}_{n}|=n$. Using the condition $|C_{uv}|\geq t$, it can be assumed that if $s<t$ for a positive integer $s$, then
+				\begin{align}
+					P(\sigma^{2}(A)
+						& \leq \sigma^{2}(B))\label{eqn:secprin}
+				\end{align}
+			should be very high where $A=\{r_{vm}:|C_{uv}|\geq t\}$, $B=\{r_{vm}:|C_{uv}|\geq s\}$ and $P(x)$ denotes the probability of the random variable $x$. Since higher value of the threshold $t$ ensures better similarity between two users, we can say in a non-rigorous way that the \textit{Pigeonhole principle} ensures \eqref{eqn:secprin} is high enough in practice more often than not.
+			\item[\bfseries Third principle] \textit{If two sets of ratings $A$ and $B$ have similar variance and consist ratings given by similar users of $u$ only, then $P(|\bar{A}-\bar{B}|<\epsilon)$ is very high for some positive real number $\epsilon$ which is considerably smaller than $1$}. We can show that a special case holds very often in practice. Since $A$ and $B$ has ratings from similar users only, assume that both $A$ and $B$ consist of $4$ and $5$ only (our data set rating range is $[1,5]$). If $|A|=m$ and $|B|=n$ and $a$ is the number of $4$ in $A$ whereas $b$ is the number of $4$ in $B$, then
+				\begin{align*}
+					\bar{A}
+						& = \dfrac{4a+5(m-a)}{m}\\
+						& = \dfrac{5m-a}{m}\\
+						& = 5-\dfrac{a}{m}\\
+					\bar{B}
+						& = \dfrac{4b+5(n-b)}{n}\\
+						& = \dfrac{5n-b}{n}\\
+						& = 5-\dfrac{b}{n}
+				\end{align*}
+			As we can see, it does not matter if $m\gg n$ or $n\gg m$ since the difference $|\bar{A}-\bar{B}|$ or the ratio $\frac{\bar{A}}{\bar{B}}$ only depends on the ratio $\dfrac{a}{m}$ and $\dfrac{b}{n}$. So as long as these ratios are similar, $\bar{A}$ and $\bar{B}$ are similar as well.
+		\end{enumerate}\clearpage
+	\section{Results}
+	We show the results of our algorithm on the Movielens 1 million data set and backup our claims with empirical evidence below.
+
 	\foreach \x in {10,20,30,50,100}
 	{
 		\foreach\y in {7,8,9}{
