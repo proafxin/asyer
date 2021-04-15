@@ -28,7 +28,7 @@ def get_accuracy(y_true, y_pred, k=3):
     y_true = [1 if y >= k else 0 for y in y_true]
     y_pred = [1 if y >= k else 0 for y in y_pred]
     
-    return f1_score(y_true, y_pred)
+    return f1_score(y_true, y_pred)*100
 
 def get_harmonic(W, X):
     den = 0
@@ -158,6 +158,7 @@ def predict(similarity, threshold, take_first):
     error_row['similarity'] = similarity
     error_row['take_first'] = take_first
     mae = mean_absolute_percentage_error(dfs['test']['rating'], dfs['test']['prediction'])
+    mae *= 100
     error_row['mae'] = mae
     error_row['f1_3'] = get_accuracy(dfs['test']['rating'], dfs['test']['prediction'])
     error_row['f1_4'] = get_accuracy(dfs['test']['rating'], dfs['test']['prediction'], 4)
@@ -171,4 +172,5 @@ if __name__ == '__main__':
             for take_first in TAKE_FIRST:
                 errors.append(predict(similarity, threshold, take_first))
     df = DataFrame(errors)
+    df = df.round(2)
     df.to_csv('errors.csv', index=False)
