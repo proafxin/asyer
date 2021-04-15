@@ -5,6 +5,8 @@
 \usepackage{csvsimple}
 \usepackage[no-math]{fontspec}
 \usepackage{biblatex}
+\usepackage{pgffor}
+\usepackage{graphicx}
 
 \setmainfont{Latin Modern Roman}[FakeBold=3]
 \usepackage{unicode-math}
@@ -72,6 +74,15 @@
 			return res
 			\caption{Algorithm to predict rating}
 		\end{algorithm}
-
+	\foreach \x in {10,20,30,50,100}
+	{
+		\foreach\y in {7,8,9}{
+			\begin{center}
+				\begin{figure}
+					\includegraphics[scale=.4]{\x\y.jpg}
+				\end{figure}
+			\end{center}
+		}\clearpage
+	}
 	\printbibliography
 \end{document}
