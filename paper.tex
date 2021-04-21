@@ -43,8 +43,8 @@
 			\KwIn{Test data in the format $(u,m)$, Threshold $t$, similarity $s$, $T$ to take first $T$ neighbors for a user $u$}
 			\KwOut{A single integer in the range $[1,5]$ denoting the predicted rating}
 			\KwData{Train data in the format $(u,m,r)$}
-			$W = []$\\
-			$X = []$\\
+			$W\leftarrow []$\\
+			$X\leftarrow []$\\
 			$tot\leftarrow0$\\
 			$R\leftarrow U_{m}$\\
 			res = 0\\
@@ -98,8 +98,23 @@
 			As we can see, it does not matter if $m\gg n$ or $n\gg m$ since the difference $|\bar{A}-\bar{B}|$ or the ratio $\frac{\bar{A}}{\bar{B}}$ only depends on the ratio $\dfrac{a}{m}$ and $\dfrac{b}{n}$. So as long as these ratios are similar, $\bar{A}$ and $\bar{B}$ are similar as well.
 		\end{enumerate}\clearpage
 	\section{Results}
-	We show the results of our algorithm on the Movielens 1 million data set and backup our claims with empirical evidence below.
+	We show the results of our algorithm on the Movielens 1 million data set and backup our claims with empirical evidence below. The quality of performance is measured using the $F1$ score. The $F1$ score is the harmonic mean of precision and recall.
+		\begin{align*}
+			P
+				& = \dfrac{TP}{TP+FP}\\
+			R
+				& = \dfrac{TP}{TP+FN}\\
+			F1
+				& = \dfrac{2PR}{R+P}
+		\end{align*}
+	We have chosen $F1$ as an accuracy metric for couple of reasons.
+		\begin{enumerate}
+			\item It is well known that the harmonic mean of $n$ positive real numbers $a_{1},\ldots,a_{n}$ is less than $\min\{a_{1},\ldots,a_{n}\}$ for $n>1$. So an $F1$ value of $x$ indicates that the model has at least $x$ precision and $x$ recall.
+			\item $F1$ score can penalize bad precision or bad recall scenarios properly where arithmetic or geometric means may fail. For example, if we consider a recommendation where we do not predict anything, technically, we do not have any errors. So the precision would be $100$ percent whereas recall would be $0$ percent. An arithmetic average would give us an accuracy of $50$ percent which is clearly wrong. $F1$ score penalizes all such scenarios accordingly. For this particular example, we would still have an $F1$ score of $0$ percent.
+		\end{enumerate}
+	For this paper, we call a test data point \textit{true positive} if a certain movie $m$ is to be recommended to user $u$ based on the rating. If the rating is over $k$ for some fixed $k$, then the movie is to be recommended, otherwise it is to be discarded. We have showed results for both $k\geq 3$ and $k\geq 4$ in this paper.
 
+	We have also used \textit{mean absolute percentage error} as a metric in place of the usual \textit{mean absolute error}. It is easy to see that mean absolute error puts equal weights on all ratings whereas mean absolute percentage errors mitigates that problem to some extent. So we felt it important to also show the results in terms of mean absolute percentage errors.
 	\foreach \x in {10,20,30,50,100}
 	{
 		\foreach\y in {7,8,9}{
@@ -107,6 +122,7 @@
 				\begin{figure}
 					\includegraphics[scale=.4]{\x\y.jpg}
 				\end{figure}
+				\label{fig:\x\y}
 			\end{center}
 		}\clearpage
 	}
