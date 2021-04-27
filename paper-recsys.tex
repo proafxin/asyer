@@ -1,27 +1,34 @@
-\documentclass{article}
+\documentclass[manuscript,screen,review]{acmart}
+%\AtBeginDocument{%
+%	\providecommand\BibTeX{{%
+%			\normalfont B\kern-0.5em{\scshape i\kern-0.25em b}\kern-0.8em\TeX}}}
+
+\setcopyright{acmcopyright}
+\copyrightyear{2021}
+\acmYear{2021}
+\acmDOI{10.1145/1122445.1122456}
 
 \usepackage{amsthm, amsmath, amssymb}
 \usepackage[linesnumbered, ruled, vlined]{algorithm2e}
-\usepackage{csvsimple}
-\usepackage[no-math]{fontspec}
-\usepackage{biblatex}
+%\usepackage{csvsimple}
+%\usepackage{biblatex}
 \usepackage{pgffor}
-\usepackage{graphicx}
-
-\setmainfont{Latin Modern Roman}[FakeBold=3]
-\usepackage{unicode-math}
-\setmathfont{NewCMMath-Book.otf}[FakeBold=3]
+%\usepackage{graphicx}
 
 \title{\bfseries A Simple Yet Effective and Efficient Collaborative Filtering Based Recommendation System}
 \author{Masum Billal}
-
-\addbibresource{ref.bib}
-
+\authornote{This research is done independently by the author, no grant or fund was accepted by the author for this work.}
+\email{billalmasum93@gmail.com}
+\orcid{0000-0002-2321-5456}
+%\addbibresource{ref.bib}
+\renewcommand{\shortauthors}{Billal, Masum}
+\citestyle{acmauthoryear}
 \begin{document}
-	%\maketitle
 	\begin{abstract}
 		In order to improve both prediction accuracy and the time required to recommend items to a user based on collaborative filtering, a simple algorithm is proposed. The algorithm is different than traditional algorithms only in some simple steps.
 	\end{abstract}
+	\keywords{Recommender system, collaborative filtering, similarity measure}
+	\maketitle
 	\section{Introduction}
 	A common problem with typical filtering based recommendation systems they usually require a lot of users similar to a user for prediction (such users are called \textbf{neighbors}). This heavily affects performance since the complexity gets incredibly high as well. \textcite{herlocker_konstan_borchers_riedl_1999} uses a memory based collaborative filtering technique that uses similarity between users to predict recommendations using KNN algorithm. This algorithm suffers from some problems such as when too few items are common between two users, predicting accurately becomes harder. \textcite{bell_koren_volinsky_2007} uses a model based learning which is inherently very expensive. \textcite{shen_wei_yang_2013} introduces a way to improve calculating similarity more accurately but they do not offer all that much improvement for the cost of learning similarity, so in this paper such improvement has been ignored and more traditional approaches have been used. \textcite{jamali_ester_2009}, \textcite{pavlov_pennock_2002} uses hybrid collaborative and content filtering or memory and model based algorithm for recommendation. While these works have their merits, most of them are complicated and offer little value to be used in practice. In this paper, we have showed that it may be possible to gain significantly better results by simply modifying traditional approaches a little bit using some principles which are mathematically sound. We will show that using our proposed modifications, we get a flat line in accuracy metric graphs much earlier.
 	\section{Algorithm}
@@ -115,15 +122,15 @@
 	For this paper, we call a test data point \textit{true positive} if a certain movie $m$ is to be recommended to user $u$ based on the rating. If the rating is over $k$ for some fixed $k$, then the movie is to be recommended, otherwise it is to be discarded. We have showed results for both $k\geq 3$ and $k\geq 4$ in this paper.
 
 	We have also used \textit{mean absolute percentage error} as a metric in place of the more traditional \textit{mean absolute error}. Mean absolute error is calculated using the formula:
-		\begin{align*}
-			MAE
-				& = \dfrac{1}{n}\sum_{i=1}^{n}|y_{i}-y_{i}'|
-		\end{align*}
+	\begin{align*}
+		MAE
+		& = \dfrac{1}{n}\sum_{i=1}^{n}|y_{i}-y_{i}'|
+	\end{align*}
 	whereas mean absolute percentage error is calculated using the formula
-		\begin{align*}
-			MAPE
-				& = \dfrac{1}{n}\sum_{i=1}^{n}\dfrac{|y_{i}-y_{i}'}{y_{i}}
-		\end{align*}
+	\begin{align*}
+		MAPE
+		& = \dfrac{1}{n}\sum_{i=1}^{n}\dfrac{|y_{i}-y_{i}'}{y_{i}}
+	\end{align*}
 	where $y_{i}$ is the actual value for the data point at $i$ and $y_{i}'$ is the predicted value of this data point. It is easy to see that mean absolute error puts equal weights on all ratings whereas mean absolute percentage errors mitigates that problem to some extent. So we felt it important to also show the results in terms of mean absolute percentage errors.
 	\foreach \x in {10,20,30,50,100}
 	{
@@ -138,5 +145,8 @@
 	}
 	\section{Conclusion}
 	As we can see in the result section, all the graphs tend to give us a flat line very early on. usually, we do not get much improvement in accuracy after $30$ neighbors and we do not have to go beyond $.7$ similarity threshold for considering neighbors.
-	\printbibliography
+	%\bibliographystyle{ACM-Reference-Format}
+	\bibliographystyle{ACM-Reference-Format}
+	\bibliography{bibfile}
+
 \end{document}
